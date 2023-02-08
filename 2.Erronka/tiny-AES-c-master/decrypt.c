@@ -21,7 +21,7 @@ void print_hex(uint8_t *buf, uint32_t c)
 
     for (i = 0; i < c; i++)
     {
-        printf("%x", buf[i]);
+        printf("%.2x", buf[i]);
     }
     printf("\n");
 }
@@ -88,42 +88,65 @@ uint32_t parse_mask(uint8_t *in, int64_t **key_mask)
 
 void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int64_t *plaintext_mask, uint8_t *key, uint8_t *plain_text, uint8_t *cypher_text)
 {
+    int buk = 0;
     struct AES_ctx *ctx;
-    int keyy[] = key;
-    int plaintexttt[] = plain_text;
-
-while ((keyy[31] < keyy[30]) && (keyy[30] < keyy[29]) && (keyy[29] < keyy[28]) && (keyy[28] < 256) )
-{
-    keyy[31]++;
-    if (keyy[31] == 256)
+    uint8_t keyy[32];
+    uint8_t plaintexttt[32];
+    for (int i = 0; i < 32; i++)
     {
-        keyy[31] = 0;
-        keyy[30]++;
-        if (keyy[30]==256)
-        {
-            keyy[30] =0;
-            keyy[29]++;
-            if (keyy[29]==256)
-            {
-                keyy[29]=0;
-                keyy[28]++;
-            }
-            
-        }
-        
+        keyy[i] = key[i];
     }
-    
-}
+    for (int i = 0; i < 32; i++)
+    {
+        plaintexttt[i] = plain_text[i];
+    }
+    keyy[31] = 0;
+    keyy[30] = 0;
+    keyy[29] = 0;
+    keyy[28] = 0;
 
-    AES_init_ctx(ctx, key);
+    //while ((keyy[31] <= keyy[30]) && (keyy[30] <= keyy[29]) && (keyy[29] <= keyy[28]) && (keyy[28] <= 256) && buk == 0)
+    //{
+        printf("\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+        AES_init_ctx(ctx, key);
+        printf("\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+        AES_CBC_encrypt_buffer(ctx, plaintexttt, 32);
+        printf("\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+        if (cypher_text == ctx->Iv)
+        {
+            printf("\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+            printf("%d\n", keyy);
+            buk = 1;
+        }
+        printf("\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+       // for (int i = 0; i < 16; i++)
+        //{
+        //    plaintexttt[i] = plain_text[i];
+        //}
+
+        // keyy[31]++;
+        // if (keyy[31] == 256)
+        // {
+
+        //     keyy[31] = 0;
+        //     keyy[30]++;
+        //     if (keyy[30] == 256)
+        //     {
+
+        //         keyy[30] = 0;
+        //         keyy[29]++;
+        //         if (keyy[29] == 256)
+        //         {
+
+        //             keyy[29] = 0;
+        //             keyy[28]++;
+        //         }
+        //     }
+        // }
+    //}
     // 1. Plaintexta xor egin Iv-rekin
     // 2. Ateratzen dena gako posiblearekin (privatekeyaescypherkutxabankXXXX) encriptatu
-    AES_CBC_encrypt_buffer(ctx, plain_text, 16);
     // 3. Ateratzen det katea fitxa cypher zaharrarekin konparatu, bedinak dbadira gakoa asmatu dugu
-    if (plaintextt == ctx->Iv)
-    {
-        printf(gakoa);
-    }
 }
 
 int main(int argc, char *argv[])
